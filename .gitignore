@@ -1,0 +1,19 @@
+# Segredos e configuração local — nunca versionar
+.env
+.env.*
+
+# Base de dados local (cada ambiente tem a sua)
+data/
+*.db
+
+# Python / uv
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Editores e sistema
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store
