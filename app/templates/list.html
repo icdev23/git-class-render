@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card toolbar">
+  <nav class="filter">
+    <a href="/" class="{{ 'active' if current_status == 'todos' }}">Todos</a>
+    {% for key, label in status_labels.items() %}
+    <a href="/?status={{ key }}" class="{{ 'active' if current_status == key }}">{{ label }}</a>
+    {% endfor %}
+  </nav>
+  <a class="button" href="/books/new">+ Novo livro</a>
+</section>
+
+<section class="card">
+  {% if books %}
+  <table>
+    <thead>
+      <tr><th>Título</th><th>Autor</th><th>Estado</th><th>Nota</th><th></th></tr>
+    </thead>
+    <tbody>
+      {% for book in books %}
+      <tr>
+        <td>{{ book.title }}</td>
+        <td>{{ book.author }}</td>
+        <td class="nowrap">{{ status_labels[book.status] }}</td>
+        <td class="nowrap">{{ "★" * book.rating if book.rating else "—" }}</td>
+        <td>
+          <div class="actions">
+            <a href="/books/{{ book.id }}/edit">Editar</a>
+            <form method="post" action="/books/{{ book.id }}/delete">
+              <button type="submit" class="link danger">Apagar</button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="empty">Nenhum livro{% if current_status != 'todos' %} neste estado{% endif %}.</p>
+  {% endif %}
+</section>
+{% endblock %}

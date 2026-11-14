@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% if not settings.is_prd %}[{{ settings.app_env | upper }}] {% endif %}Catálogo de livros</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}">
+</head>
+<body>
+  {% if not settings.is_prd %}
+  <div class="env-banner env-{{ settings.app_env }}">
+    Ambiente {{ settings.app_env | upper }} — não é produção
+  </div>
+  {% endif %}
+  <header>
+    <h1><a href="/">Catálogo de livros</a></h1>
+    <p class="subtitle">git-class-render · aula prática de Git</p>
+  </header>
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+  <footer>
+    v{{ settings.version }} · {{ settings.app_env }}{% if settings.commit %} · commit {{ settings.commit }}{% endif %}
+  </footer>
+</body>
+</html>

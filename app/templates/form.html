@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card">
+  <h2>{{ "Editar livro" if book and book.id else "Novo livro" }}</h2>
+
+  {% if errors %}
+  <ul class="errors">
+    {% for error in errors %}<li>{{ error }}</li>{% endfor %}
+  </ul>
+  {% endif %}
+
+  <form method="post" action="{{ '/books/%s' % book.id if book and book.id else '/books' }}" class="book-form">
+    <label>Título
+      <input name="title" value="{{ book.title if book else '' }}" required>
+    </label>
+    <label>Autor
+      <input name="author" value="{{ book.author if book else '' }}" required>
+    </label>
+    <label>Estado
+      <select name="status">
+        {% for key, label in status_labels.items() %}
+        <option value="{{ key }}" {{ 'selected' if book and book.status == key }}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>Nota
+      <select name="rating">
+        <option value="">—</option>
+        {% for n in range(1, 6) %}
+        <option value="{{ n }}">{{ n }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <div class="form-actions">
+      <a href="/">Cancelar</a>
+      <button type="submit" class="button">Guardar</button>
+    </div>
+  </form>
+</section>
+{% endblock %}
