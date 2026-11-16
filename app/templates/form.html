@@ -27,7 +27,7 @@
       <select name="rating">
         <option value="">—</option>
         {% for n in range(1, 6) %}
-        <option value="{{ n }}">{{ n }}</option>
+        <option value="{{ n }}" {{ 'selected' if book and book.rating == n }}>{{ n }}</option>
         {% endfor %}
       </select>
     </label>
