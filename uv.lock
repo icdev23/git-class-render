@@ -71,7 +71,7 @@ wheels = [
 
 [[package]]
 name = "git-class-render"
-version = "0.2.0"
+version = "0.2.1"
 source = { virtual = "." }
 dependencies = [
     { name = "fastapi" },

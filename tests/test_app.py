@@ -100,3 +100,9 @@ def test_read_date_cannot_be_in_future(client):
 
 def test_edit_form_keeps_read_date(client):
     assert 'value="2026-01-15"' in client.get("/books/1/edit").text
+
+
+def test_edit_form_keeps_rating(client):
+    # Regressão do bug corrigido na v0.2.1: a nota não vinha pré-selecionada ao editar
+    html = client.get("/books/1/edit").text  # seed DEV: livro 1 com nota 3
+    assert '<option value="3" selected>' in html

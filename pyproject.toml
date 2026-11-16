@@ -1,6 +1,6 @@
 [project]
 name = "git-class-render"
-version = "0.2.0"
+version = "0.2.1"
 description = "Catálogo de livros para praticar branches de ambiente (DEV, QA, PRD) no Render."
 readme = "README.md"
 requires-python = ">=3.13"
