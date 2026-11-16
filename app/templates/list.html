@@ -14,7 +14,7 @@
   {% if books %}
   <table>
     <thead>
-      <tr><th>Título</th><th>Autor</th><th>Estado</th><th>Nota</th><th></th></tr>
+      <tr><th>Título</th><th>Autor</th><th>Estado</th><th>Nota</th><th>Lido em</th><th></th></tr>
     </thead>
     <tbody>
       {% for book in books %}
@@ -23,6 +23,7 @@
         <td>{{ book.author }}</td>
         <td class="nowrap">{{ status_labels[book.status] }}</td>
         <td class="nowrap">{{ "★" * book.rating if book.rating else "—" }}</td>
+        <td class="nowrap">{{ book.read_on | pt_date }}</td>
         <td>
           <div class="actions">
             <a href="/books/{{ book.id }}/edit">Editar</a>

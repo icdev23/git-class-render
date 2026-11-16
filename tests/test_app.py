@@ -76,3 +76,27 @@ def test_filter_by_status(client):
 
 def test_missing_book_returns_404(client):
     assert client.get("/books/999/edit").status_code == 404
+
+
+def test_create_with_read_date(client):
+    r = client.post("/books", data={"title": "Com data", "author": "A", "status": "lido",
+                                    "rating": "", "read_on": "2026-02-03"})
+    assert r.status_code == 200
+    assert "03/02/2026" in r.text
+
+
+def test_read_date_requires_status_read(client):
+    r = client.post("/books", data={"title": "X", "author": "Y", "status": "por-ler",
+                                    "read_on": "2026-02-03"})
+    assert r.status_code == 422
+    assert "Só um livro lido pode ter data de leitura." in r.text
+
+
+def test_read_date_cannot_be_in_future(client):
+    r = client.post("/books", data={"title": "X", "author": "Y", "status": "lido",
+                                    "read_on": "2999-01-01"})
+    assert r.status_code == 422
+
+
+def test_edit_form_keeps_read_date(client):
+    assert 'value="2026-01-15"' in client.get("/books/1/edit").text

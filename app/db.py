@@ -9,27 +9,28 @@ CREATE TABLE IF NOT EXISTS books (
     title   TEXT NOT NULL,
     author  TEXT NOT NULL,
     status  TEXT NOT NULL CHECK (status IN ('por-ler', 'lido')),
-    rating  INTEGER CHECK (rating BETWEEN 1 AND 5)
+    rating  INTEGER CHECK (rating BETWEEN 1 AND 5),
+    read_on TEXT  -- data de leitura (AAAA-MM-DD), só para livros lidos
 )
 """
 
-# (title, author, status, rating) — dados diferentes em cada ambiente
-SEEDS: dict[str, list[tuple[str, str, str, int | None]]] = {
+# (title, author, status, rating, read_on) — dados diferentes em cada ambiente
+SEEDS: dict[str, list[tuple[str, str, str, int | None, str | None]]] = {
     "dev": [
-        ("[DEV] Livro de teste 1", "Autor Fictício", "lido", 3),
-        ("[DEV] Livro de teste 2", "Autora Fictícia", "por-ler", None),
-        ("[DEV] Livro de teste 3", "Outro Autor", "lido", 5),
+        ("[DEV] Livro de teste 1", "Autor Fictício", "lido", 3, "2026-01-15"),
+        ("[DEV] Livro de teste 2", "Autora Fictícia", "por-ler", None, None),
+        ("[DEV] Livro de teste 3", "Outro Autor", "lido", 5, None),
     ],
     "qa": [
         ("Um título propositadamente muito longo para ver como a tabela se comporta quando o texto não cabe numa linha",
-         "Autor com Acentuação Çãõ", "lido", 1),
-        ("Livro sem nota", "QA Tester", "por-ler", None),
-        ("Livro com nota máxima", "QA Tester", "lido", 5),
+         "Autor com Acentuação Çãõ", "lido", 1, "2025-12-31"),
+        ("Livro sem nota", "QA Tester", "por-ler", None, None),
+        ("Livro com nota máxima", "QA Tester", "lido", 5, None),
     ],
     "prd": [
-        ("The Pragmatic Programmer", "David Thomas, Andrew Hunt", "lido", 5),
-        ("Clean Code", "Robert C. Martin", "lido", 4),
-        ("Designing Data-Intensive Applications", "Martin Kleppmann", "por-ler", None),
+        ("The Pragmatic Programmer", "David Thomas, Andrew Hunt", "lido", 5, "2025-03-10"),
+        ("Clean Code", "Robert C. Martin", "lido", 4, "2025-07-22"),
+        ("Designing Data-Intensive Applications", "Martin Kleppmann", "por-ler", None, None),
     ],
 }
 
@@ -48,7 +49,7 @@ def init_db(db_path: Path, app_env: str) -> None:
         empty = conn.execute("SELECT COUNT(*) FROM books").fetchone()[0] == 0
         if empty:
             conn.executemany(
-                "INSERT INTO books (title, author, status, rating) VALUES (?, ?, ?, ?)",
+                "INSERT INTO books (title, author, status, rating, read_on) VALUES (?, ?, ?, ?, ?)",
                 SEEDS[app_env],
             )
     conn.close()
