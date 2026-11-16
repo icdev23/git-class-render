@@ -31,6 +31,9 @@
         {% endfor %}
       </select>
     </label>
+    <label>Data de leitura
+      <input type="date" name="read_on" value="{{ book.read_on or '' if book else '' }}">
+    </label>
     <div class="form-actions">
       <a href="/">Cancelar</a>
       <button type="submit" class="button">Guardar</button>

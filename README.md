@@ -42,7 +42,7 @@ A configuração é lida ao arrancar e nunca entra no código: o mesmo código c
 
 | | |
 | --- | --- |
-| Build Command | `uv sync --frozen --no-dev` |
+| Build Command | `uv sync --frozen --no-dev && uv cache prune --ci` |
 | Start Command | `uv run --no-sync uvicorn app.main:app --host 0.0.0.0 --port $PORT` |
 | Variável | `APP_ENV` = `dev` / `qa` / `prd` conforme o serviço |
 
