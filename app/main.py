@@ -28,6 +28,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.mount("/static", StaticFiles(directory=APP_DIR / "static"), name="static")
     templates = Jinja2Templates(directory=APP_DIR / "templates")
     templates.env.globals.update(settings=settings, status_labels=books.STATUS_LABELS)
+    templates.env.filters["pt_date"] = books.format_date
 
     def get_conn() -> Iterator[sqlite3.Connection]:
         conn = db.connect(settings.db_path)
@@ -64,8 +65,9 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     @app.post("/books")
     def create(request: Request, title: str = Form(""), author: str = Form(""),
-               status: str = Form("por-ler"), rating: str = Form(""), conn=Depends(get_conn)):
-        data, errors = books.validate(title, author, status, rating)
+               status: str = Form("por-ler"), rating: str = Form(""), read_on: str = Form(""),
+               conn=Depends(get_conn)):
+        data, errors = books.validate(title, author, status, rating, read_on)
         if errors:
             return templates.TemplateResponse(request, "form.html",
                                               {"book": data, "errors": errors}, status_code=422)
@@ -79,9 +81,10 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     @app.post("/books/{book_id}")
     def update(request: Request, book_id: int, title: str = Form(""), author: str = Form(""),
-               status: str = Form("por-ler"), rating: str = Form(""), conn=Depends(get_conn)):
+               status: str = Form("por-ler"), rating: str = Form(""), read_on: str = Form(""),
+               conn=Depends(get_conn)):
         get_or_404(conn, book_id)
-        data, errors = books.validate(title, author, status, rating)
+        data, errors = books.validate(title, author, status, rating, read_on)
         if errors:
             return templates.TemplateResponse(request, "form.html",
                                               {"book": {**data, "id": book_id}, "errors": errors},
